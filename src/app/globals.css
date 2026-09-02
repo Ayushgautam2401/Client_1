@@ -1,25 +1,560 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&family=Inter:wght@300;400;500;600;700&display=swap');
+
 @import "tailwindcss";
 
+/* ===========================
+   DESIGN TOKENS
+=========================== */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Color Palette */
+  --ivory: #FAF8F4;
+  --cream: #F5F0E8;
+  --beige: #E8DDD0;
+  --champagne: #D4B896;
+  --gold: #B8975A;
+  --gold-light: #D4B896;
+  --charcoal: #1C1A18;
+  --charcoal-mid: #2D2B28;
+  --charcoal-soft: #3D3A36;
+  --warm-gray: #8A8278;
+  --warm-gray-light: #B5B0A8;
+  --text-primary: #1C1A18;
+  --text-secondary: #5A5650;
+  --text-muted: #8A8278;
+  --border-light: rgba(180, 160, 130, 0.2);
+  --border-mid: rgba(180, 160, 130, 0.4);
+  --glass-bg: rgba(250, 248, 244, 0.85);
+  --glass-dark: rgba(28, 26, 24, 0.92);
+  
+  /* Typography */
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  
+  /* Spacing */
+  --section-padding: 6rem 2rem;
+  --container-max: 1280px;
+  
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-mid: 0.4s ease;
+  --transition-slow: 0.8s ease;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ===========================
+   RESET & BASE
+=========================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  font-family: var(--font-body);
+  background-color: var(--ivory);
+  color: var(--text-primary);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ===========================
+   TYPOGRAPHY
+=========================== */
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+h4, h5, h6 {
+  font-family: var(--font-body);
+  font-weight: 500;
+}
+
+/* ===========================
+   ACCESSIBILITY
+=========================== */
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Skip to content link */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  background: var(--charcoal);
+  color: var(--ivory);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0 0 8px 8px;
+  font-weight: 600;
+  z-index: 9999;
+  text-decoration: none;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* ===========================
+   REDUCED MOTION
+=========================== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ===========================
+   SELECTION
+=========================== */
+::selection {
+  background: rgba(212, 184, 150, 0.35);
+  color: var(--charcoal);
+}
+
+/* ===========================
+   SCROLLBAR
+=========================== */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--cream);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--champagne);
+  border-radius: 3px;
+}
+
+/* ===========================
+   LAYOUT UTILITIES
+=========================== */
+.container {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 0 1.25rem;
+  }
+}
+
+/* ===========================
+   NOISE TEXTURE OVERLAY
+=========================== */
+.noise-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity: 0.04;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ===========================
+   GLASS EFFECTS
+=========================== */
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid var(--border-light);
+}
+
+.glass-dark {
+  background: var(--glass-dark);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(212, 184, 150, 0.15);
+}
+
+/* ===========================
+   GRADIENT UTILITIES
+=========================== */
+.gradient-gold {
+  background: linear-gradient(135deg, var(--champagne), var(--gold), var(--champagne));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-warm {
+  background: linear-gradient(160deg, var(--ivory) 0%, var(--cream) 50%, var(--beige) 100%);
+}
+
+/* ===========================
+   SECTION STYLES
+=========================== */
+.section {
+  padding: 5rem 0;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 4rem 0;
+  }
+}
+
+/* ===========================
+   DIVIDER
+=========================== */
+.divider {
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 1.5rem auto;
+}
+
+/* ===========================
+   CHATBOT STYLES
+=========================== */
+.chat-bubble-user {
+  background: var(--charcoal);
+  color: var(--ivory);
+  border-radius: 18px 18px 4px 18px;
+}
+
+.chat-bubble-bot {
+  background: var(--cream);
+  color: var(--charcoal);
+  border: 1px solid var(--border-light);
+  border-radius: 18px 18px 18px 4px;
+}
+
+/* ===========================
+   ANIMATION CLASSES
+=========================== */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(184, 151, 90, 0.2); }
+  50% { box-shadow: 0 0 40px rgba(184, 151, 90, 0.4); }
+}
+
+@keyframes typing-dot {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+
+.float-animation {
+  animation: float 6s ease-in-out infinite;
+}
+
+.shimmer {
+  background: linear-gradient(90deg, var(--cream) 25%, var(--beige) 50%, var(--cream) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* ===========================
+   HERO PARTICLES
+=========================== */
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  will-change: transform;
+}
+
+/* ===========================
+   CUSTOM PROSE
+=========================== */
+.prose-brand p {
+  color: var(--text-secondary);
+  font-size: 1.0625rem;
+  line-height: 1.8;
+}
+
+.prose-brand p + p {
+  margin-top: 1.25rem;
+}
+
+/* ===========================
+   BUTTON BASE
+=========================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 2rem;
+  border-radius: 4px;
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary {
+  background: var(--charcoal);
+  color: var(--ivory);
+}
+
+.btn-primary:hover {
+  background: var(--charcoal-soft);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 30px rgba(28, 26, 24, 0.25);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--charcoal);
+  border: 1px solid var(--charcoal);
+}
+
+.btn-outline:hover {
+  background: var(--charcoal);
+  color: var(--ivory);
+  transform: translateY(-1px);
+}
+
+.btn-gold {
+  background: linear-gradient(135deg, var(--gold), var(--champagne));
+  color: var(--charcoal);
+}
+
+.btn-gold:hover {
+  box-shadow: 0 8px 30px rgba(184, 151, 90, 0.4);
+  transform: translateY(-1px);
+}
+
+/* ===========================
+   CARD BASE
+=========================== */
+.card {
+  background: var(--ivory);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  transition: all 0.4s ease;
+}
+
+.card:hover {
+  border-color: var(--border-mid);
+  box-shadow: 0 16px 48px rgba(28, 26, 24, 0.08);
+  transform: translateY(-4px);
+}
+
+/* ===========================
+   ACCORDION
+=========================== */
+details summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+details summary::-webkit-details-marker {
+  display: none;
+}
+
+/* ===========================
+   MOBILE NAV
+=========================== */
+.mobile-nav-open {
+  overflow: hidden;
+}
+
+/* ===========================
+   INPUT STYLES
+=========================== */
+.input-brand {
+  width: 100%;
+  background: var(--cream);
+  border: 1px solid var(--border-mid);
+  border-radius: 6px;
+  padding: 0.875rem 1.25rem;
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  color: var(--charcoal);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-brand:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 3px rgba(184, 151, 90, 0.15);
+}
+
+.input-brand::placeholder {
+  color: var(--warm-gray);
+}
+
+/* ===========================
+   JOURNEY TIMELINE — 3D
+=========================== */
+
+/* Perspective scene wrapper */
+.journey-scene {
+  perspective: 1400px;
+  perspective-origin: 50% 40%;
+}
+
+/* Vertical glowing track */
+.journey-track {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    var(--champagne) 10%,
+    var(--gold) 50%,
+    var(--champagne) 90%,
+    transparent 100%
+  );
+  opacity: 0.35;
+}
+
+.journey-track-fill {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 2px;
+  transform: translateX(-50%);
+  background: linear-gradient(to bottom, var(--gold), var(--champagne));
+  transform-origin: top center;
+  box-shadow: 0 0 12px 2px rgba(184, 151, 90, 0.5);
+}
+
+/* Chapter dot on track */
+.journey-dot {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: 2px solid var(--ivory);
+  z-index: 3;
+  box-shadow: 0 0 0 4px rgba(184, 151, 90, 0.25);
+}
+
+/* Chapter card base */
+.journey-card {
+  position: relative;
+  background: linear-gradient(135deg, rgba(28,26,24,0.92) 0%, rgba(45,43,40,0.88) 100%);
+  border: 1px solid rgba(212, 184, 150, 0.18);
+  border-radius: 8px;
+  padding: 2rem 2.25rem;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+  box-shadow:
+    0 24px 60px rgba(28,26,24,0.35),
+    inset 0 1px 0 rgba(212,184,150,0.12);
+  transition: box-shadow 0.4s ease, border-color 0.4s ease;
+}
+
+.journey-card:hover {
+  border-color: rgba(212, 184, 150, 0.38);
+  box-shadow:
+    0 32px 80px rgba(28,26,24,0.45),
+    0 0 40px rgba(184, 151, 90, 0.08),
+    inset 0 1px 0 rgba(212,184,150,0.2);
+}
+
+/* Connector line from dot to card */
+.journey-connector {
+  position: absolute;
+  top: 50%;
+  height: 1px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  opacity: 0.5;
+}
+
+/* Ambient particles */
+@keyframes orbit {
+  0%   { transform: translate(0px, 0px) scale(1); opacity: 0.6; }
+  25%  { transform: translate(18px, -14px) scale(1.2); opacity: 1; }
+  50%  { transform: translate(6px, -28px) scale(0.85); opacity: 0.5; }
+  75%  { transform: translate(-12px, -14px) scale(1.1); opacity: 0.9; }
+  100% { transform: translate(0px, 0px) scale(1); opacity: 0.6; }
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 4px rgba(184, 151, 90, 0.2),
+                0 0 12px rgba(184, 151, 90, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(184, 151, 90, 0.1),
+                0 0 24px rgba(184, 151, 90, 0.5);
+  }
+}
+
+.journey-dot {
+  animation: glow-pulse 2.4s ease-in-out infinite;
+}
+
+.journey-particle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--gold) 0%, transparent 70%);
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+/* ===========================
+   JOURNEY RESPONSIVE
+=========================== */
+@media (max-width: 900px) {
+  .journey-track,
+  .journey-track-fill {
+    left: 24px;
+  }
+  .journey-dot {
+    left: 24px;
+  }
 }
